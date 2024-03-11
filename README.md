@@ -1,1 +1,1 @@
-# dragdropworkoutserver
+# workout-planner-server
