@@ -3,28 +3,10 @@ require('dotenv').config();
 const KB = 1024;
 const MB = 1024 * KB;
 
-const STAGING = 'staging'
-const PRODUCTION = 'production'
-
-//Development
-let baseUrl = 'http://localhost:4500';
-let clientUrl = 'http://localhost:3000';
-let port = 4500;
-
-if (process.env.NODE_ENV === PRODUCTION) {
-  baseUrl = 'https://[].com';
-  clientUrl = 'https://[].com';
-  port = 5600;
-} else if (process.env.NODE_ENV === STAGING) {
-  baseUrl = 'https://[].com';
-  clientUrl = 'https://[].com';
-  port = 5600;
-}
-
-export const PORT = port;
-export const BASE_URL = baseUrl;
-export const CLIENT_URL = clientUrl;
-export const SALT_ROUNDS = 10;
+export const PORT = process.env.PORT;
+export const BASE_URL = process.env.BASE_URL;
+export const CLIENT_URL = process.env.CLIENT_URL;
+export const SALT_ROUNDS = process.env.SALT_ROUNDS;
 
 export const DEFAULT_PASSPORT_STRATEGY = 'jwt';
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -53,7 +35,7 @@ export const DEFAULT_ROLES = {
   SUPER_ADMIN: 1,
   COMPANY_ADMIN: 2,
   USER: 3,
-}
+};
 
 // Social Media Types
 export const SOCIAL_MEDIA_TYPES = {
