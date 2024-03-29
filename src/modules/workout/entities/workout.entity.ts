@@ -1,31 +1,28 @@
 import {
-  AllowNull, Column,
-  DataType, Model,
+  AllowNull,
+  Column,
+  DataType,
+  HasMany,
+  Model,
   Table,
-  HasMany
 } from 'sequelize-typescript';
-import { Exercise } from 'src/modules/exercise/entities/exercise.entity';
+import { SelectedExercise } from 'src/modules/selected-exercise/entities/selected-exercise.entity';
 import { PrimaryGeneratedColumn } from 'typeorm';
-// import { Company } from 'src/modules/company/entities/company.entity';
 
 @Table({
   tableName: 'workouts',
   timestamps: true,
   paranoid: true,
 })
-
 export class Workout extends Model {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column(DataType.TEXT)
   title: string;
-  
+
   @Column(DataType.TEXT)
   description: string;
-  
-  @Column(DataType.TEXT)
-  thumbnail: string;
 
   @AllowNull(false)
   @Column(DataType.DATE)
@@ -39,6 +36,6 @@ export class Workout extends Model {
 
   //-- ASSOCIATIONS
 
-  @HasMany(() => Exercise, { foreignKey: 'workoutId' })
-  Exercise: Exercise;
+  @HasMany(() => SelectedExercise, { foreignKey: 'workoutId' })
+  SelectedExercise: SelectedExercise;
 }

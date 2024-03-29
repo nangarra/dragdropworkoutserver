@@ -9,9 +9,10 @@ import { UNIQUE_KEY_VIOLATION } from 'src/constants';
 import { LoginToken } from '../auth/entities/login-token.entity';
 import { SuperUser } from '../user/entities/super-user.entity';
 import { User } from '../user/entities/user.entity';
-import { Workout } from '../workout/entities/workout.entity';
+import { Nutrition } from '../nutrition/entities/nutrition.entity';
 import { Exercise } from '../exercise/entities/exercise.entity';
-import { SelectedExercise } from '../selected-workouts/entities/selected-exercise.entity';
+import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
+import { Workout } from '../workout/entities/workout.entity';
 
 @Injectable()
 export class GlobalDbService {
@@ -24,18 +25,22 @@ export class GlobalDbService {
     private readonly loginTokenRepository: typeof LoginToken,
     @Inject(REPOSITORIES.SUPER_USER_REPOSITORY)
     private readonly superUserRepository: typeof SuperUser,
-    @Inject(REPOSITORIES.WORKOUT_REPOSITORY)
-    private readonly workoutRepo: typeof Workout,
+    @Inject(REPOSITORIES.NUTRITION_REPOSITORY)
+    private readonly nutritionRepo: typeof Nutrition,
     @Inject(REPOSITORIES.EXERCISE_REPOSITORY)
     private readonly exerciseRepo: typeof Exercise,
+    @Inject(REPOSITORIES.WORKOUT_REPOSITORY)
+    private readonly workoutRepo: typeof Workout,
+
     @Inject(REPOSITORIES.SELECTED_EXERCISE_REPOSITORY)
     private readonly selectedExercise: typeof SelectedExercise,
   ) {
     this.repo['User'] = this.userRepository;
     this.repo['LoginToken'] = this.loginTokenRepository;
     this.repo['SuperUser'] = this.superUserRepository;
-    this.repo['Workout'] = this.workoutRepo;
+    this.repo['Nutrition'] = this.nutritionRepo;
     this.repo['Exercise'] = this.exerciseRepo;
+    this.repo['Workout'] = this.workoutRepo;
     this.repo['SelectedExercise'] = this.selectedExercise;
   }
 

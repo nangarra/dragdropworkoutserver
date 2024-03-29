@@ -4,8 +4,9 @@ import { LoginToken } from '../auth/entities/login-token.entity';
 import { SuperUser } from '../user/entities/super-user.entity';
 import { User } from '../user/entities/user.entity';
 import { Exercise } from '../exercise/entities/exercise.entity';
+import { Nutrition } from '../nutrition/entities/nutrition.entity';
+import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
 import { Workout } from '../workout/entities/workout.entity';
-import { SelectedExercise } from '../selected-workouts/entities/selected-exercise.entity';
 
 export const globalDbProvider = [
   TransactionInterceptor,
@@ -22,12 +23,16 @@ export const globalDbProvider = [
     useValue: LoginToken,
   },
   {
-    provide: REPOSITORIES.WORKOUT_REPOSITORY,
-    useValue: Workout,
+    provide: REPOSITORIES.NUTRITION_REPOSITORY,
+    useValue: Nutrition,
   },
   {
     provide: REPOSITORIES.EXERCISE_REPOSITORY,
     useValue: Exercise,
+  },
+  {
+    provide: REPOSITORIES.WORKOUT_REPOSITORY,
+    useValue: Workout,
   },
   {
     provide: REPOSITORIES.SELECTED_EXERCISE_REPOSITORY,

@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
+import _ from 'lodash';
+import { Op, Sequelize } from 'sequelize';
 
 @Injectable()
 export class WorkoutService {
@@ -8,7 +10,27 @@ export class WorkoutService {
 
   getAll = async (params: any) => {
     const { repo } = this.DB;
+    const where: any = {};
+
+    if (params.workoutId) {
+      where.workoutId = params.workoutId;
+    }
     return repo.Workout.findAll({
+      attributes: [
+        'createdAt',
+        'deletedAt',
+        'description',
+        'id',
+        'thumbnail',
+        'title',
+        'updatedAt',
+        'workoutId',
+        [Sequelize.col('SelectedWorkout.sequence'), 'sequence'],
+      ],
+      where,
+      include: {
+        model: repo.SelectedWorkout,
+      },
       order: [['updatedAt', 'desc']],
     });
   };
@@ -23,6 +45,7 @@ export class WorkoutService {
 
   delete = async (id: string, loggedInUser: any) => {
     try {
+      await this.DB.delete('SelectedWorkout', { workoutId: id }, loggedInUser);
       await this.DB.delete('Workout', { id }, loggedInUser);
       return { message: 'Workout Deleted!' };
     } catch (error) {

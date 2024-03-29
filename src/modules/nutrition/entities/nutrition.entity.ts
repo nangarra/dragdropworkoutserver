@@ -2,20 +2,21 @@ import {
   AllowNull,
   Column,
   DataType,
-  HasMany,
-  HasOne,
   Model,
   Table,
+  HasMany,
 } from 'sequelize-typescript';
+import { Exercise } from 'src/modules/exercise/entities/exercise.entity';
 import { SelectedExercise } from 'src/modules/selected-exercise/entities/selected-exercise.entity';
 import { PrimaryGeneratedColumn } from 'typeorm';
+// import { Company } from 'src/modules/company/entities/company.entity';
 
 @Table({
-  tableName: 'exercises',
+  tableName: 'nutritions',
   timestamps: true,
   paranoid: true,
 })
-export class Exercise extends Model {
+export class Nutrition extends Model {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -40,6 +41,6 @@ export class Exercise extends Model {
 
   //-- ASSOCIATIONS
 
-  @HasMany(() => SelectedExercise, { foreignKey: 'exerciseId' })
+  @HasMany(() => SelectedExercise, { foreignKey: 'nutritionId' })
   SelectedExercise: SelectedExercise;
 }

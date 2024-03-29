@@ -7,14 +7,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { SelectedWorkoutService } from './selected-exercise.service';
+import { SelectedExerciseService } from './selected-exercise.service';
 import { GetLoggedInUser } from '../auth/decorators/get-logged-in-user.decorator';
 
 @UseGuards(AuthGuard())
 @Controller('selected-exercise')
-export class SelectedWorkoutController {
-  private logger = new Logger('SelectedWorkoutController');
-  constructor(private readonly service: SelectedWorkoutService) {}
+export class SelectedExerciseController {
+  private logger = new Logger('SelectedExerciseController');
+  constructor(private readonly service: SelectedExerciseService) {}
 
   @Post('/:id/save')
   save(

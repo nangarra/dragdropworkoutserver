@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './modules/user/user.module';
-import { GlobalDbModule } from './modules/global-db/global-db.module';
-import { WorkoutModule } from './modules/workout/workout.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ExerciseModule } from './modules/exercise/exercise.module';
-import { SelectedWorkoutModule } from './modules/selected-workouts/selected-exercise.module';
+import { GlobalDbModule } from './modules/global-db/global-db.module';
+import { NutritionModule } from './modules/nutrition/nutrition.module';
+import { SelectedExerciseModule } from './modules/selected-exercise/selected-exercise.module';
+import { UserModule } from './modules/user/user.module';
+import { WorkoutModule } from './modules/workout/workout.module';
 
 @Module({
   imports: [
@@ -13,9 +14,10 @@ import { SelectedWorkoutModule } from './modules/selected-workouts/selected-exer
     AuthModule,
     DatabaseModule,
     UserModule,
-    WorkoutModule,
+    NutritionModule,
     ExerciseModule,
-    SelectedWorkoutModule,
+    WorkoutModule,
+    SelectedExerciseModule,
   ],
   controllers: [],
   providers: [],

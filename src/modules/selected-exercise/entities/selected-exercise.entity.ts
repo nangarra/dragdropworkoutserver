@@ -8,6 +8,8 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Exercise } from 'src/modules/exercise/entities/exercise.entity';
+import { Nutrition } from 'src/modules/nutrition/entities/nutrition.entity';
+import { Workout } from 'src/modules/workout/entities/workout.entity';
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 @Table({
@@ -25,6 +27,21 @@ export class SelectedExercise extends Model {
     field: 'fkExerciseId',
   })
   exerciseId: string;
+
+  @ForeignKey(() => Nutrition)
+  @Column({
+    type: DataType.UUID,
+    field: 'fkNutritionId',
+  })
+  nutritionId: string;
+
+  @AllowNull(false)
+  @ForeignKey(() => Workout)
+  @Column({
+    type: DataType.UUID,
+    field: 'fkWorkoutId',
+  })
+  workoutId: string;
 
   @Column(DataType.INTEGER)
   sets: number;
@@ -55,4 +72,10 @@ export class SelectedExercise extends Model {
 
   @BelongsTo(() => Exercise, { foreignKey: 'exerciseId' })
   Exercise: Exercise;
+
+  @BelongsTo(() => Nutrition, { foreignKey: 'nutritionId' })
+  Nutrition: Nutrition;
+
+  @BelongsTo(() => Workout, { foreignKey: 'workoutId' })
+  Workout: Workout;
 }

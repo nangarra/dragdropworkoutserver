@@ -4,8 +4,8 @@ import { Op } from 'sequelize';
 import * as _ from 'lodash';
 
 @Injectable()
-export class SelectedWorkoutService {
-  private logger = new Logger('SelectedWorkoutService');
+export class SelectedExerciseService {
+  private logger = new Logger('SelectedExerciseService');
   constructor(private readonly DB: GlobalDbService) {}
 
   save = async (

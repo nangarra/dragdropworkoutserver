@@ -12,9 +12,6 @@ export class ExerciseService {
     const { repo } = this.DB;
     const where: any = {};
 
-    if (params.workoutId) {
-      where.workoutId = params.workoutId;
-    }
     return repo.Exercise.findAll({
       attributes: [
         'createdAt',
@@ -24,13 +21,8 @@ export class ExerciseService {
         'thumbnail',
         'title',
         'updatedAt',
-        'workoutId',
-        [Sequelize.col('SelectedExercise.sequence'), 'sequence'],
       ],
       where,
-      include: {
-        model: repo.SelectedExercise,
-      },
       order: [['updatedAt', 'desc']],
     });
   };
