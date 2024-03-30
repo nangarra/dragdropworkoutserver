@@ -26,7 +26,6 @@ export class ExerciseService {
       order: [['updatedAt', 'desc']],
     });
   };
-
   save = async (data: any, loggedInUser: any) => {
     try {
       return this.DB.save('Exercise', data, loggedInUser);
