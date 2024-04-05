@@ -13,12 +13,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { NutritionService } from './nutrition.service';
 import { GetLoggedInUser } from '../auth/decorators/get-logged-in-user.decorator';
 
-@UseGuards(AuthGuard())
 @Controller('nutritions')
 export class NutritionController {
   private logger = new Logger('NutritionController');
   constructor(private readonly service: NutritionService) {}
 
+  @UseGuards(AuthGuard())
   @Post('/save')
   save(@Body() body: any, @GetLoggedInUser() loggedInUser: any) {
     return this.service.save(body, loggedInUser);
@@ -29,6 +29,7 @@ export class NutritionController {
     return this.service.getAll(query);
   }
 
+  @UseGuards(AuthGuard())
   @Delete('/:id')
   delete(@Param('id') id: string, @GetLoggedInUser() loggedInUser: any) {
     return this.service.delete(id, loggedInUser);
