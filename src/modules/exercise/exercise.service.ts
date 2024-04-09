@@ -12,6 +12,10 @@ export class ExerciseService {
     const { repo } = this.DB;
     const where: any = {};
 
+    if (params.search) {
+      where.title = { [Op.iLike]: `%${params.search}%` };
+    }
+
     return repo.Exercise.findAll({
       attributes: [
         'createdAt',

@@ -13,6 +13,7 @@ import { Nutrition } from '../nutrition/entities/nutrition.entity';
 import { Exercise } from '../exercise/entities/exercise.entity';
 import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
 import { Workout } from '../workout/entities/workout.entity';
+import { WorkoutRating } from '../workout/entities/workout-rating.entity';
 
 @Injectable()
 export class GlobalDbService {
@@ -31,7 +32,8 @@ export class GlobalDbService {
     private readonly exerciseRepo: typeof Exercise,
     @Inject(REPOSITORIES.WORKOUT_REPOSITORY)
     private readonly workoutRepo: typeof Workout,
-
+    @Inject(REPOSITORIES.WORKOUT_RATING_REPOSITORY)
+    private readonly workoutRatingRepo: typeof WorkoutRating,
     @Inject(REPOSITORIES.SELECTED_EXERCISE_REPOSITORY)
     private readonly selectedExercise: typeof SelectedExercise,
   ) {
@@ -41,6 +43,7 @@ export class GlobalDbService {
     this.repo['Nutrition'] = this.nutritionRepo;
     this.repo['Exercise'] = this.exerciseRepo;
     this.repo['Workout'] = this.workoutRepo;
+    this.repo['WorkoutRating'] = this.workoutRatingRepo;
     this.repo['SelectedExercise'] = this.selectedExercise;
   }
 

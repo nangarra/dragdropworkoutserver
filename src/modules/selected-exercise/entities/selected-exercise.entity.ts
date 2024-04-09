@@ -50,13 +50,28 @@ export class SelectedExercise extends Model {
   repititions: number;
 
   @Column(DataType.INTEGER)
+  sequence: number;
+
+  @Column(DataType.INTEGER)
   seconds: number;
 
   @Column(DataType.INTEGER)
   minutes: number;
 
   @Column(DataType.INTEGER)
-  sequence: number;
+  calories: number;
+
+  @Column(DataType.INTEGER)
+  protein: number;
+
+  @Column(DataType.INTEGER)
+  weight: number;
+
+  @Column(DataType.INTEGER)
+  fat: number;
+
+  @Column(DataType.INTEGER)
+  pcs: number;
 
   @AllowNull(false)
   @Column(DataType.DATE)

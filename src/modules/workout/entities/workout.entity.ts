@@ -2,12 +2,14 @@ import {
   AllowNull,
   Column,
   DataType,
+  Default,
   HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { SelectedExercise } from 'src/modules/selected-exercise/entities/selected-exercise.entity';
 import { PrimaryGeneratedColumn } from 'typeorm';
+import { WorkoutRating } from './workout-rating.entity';
 
 @Table({
   tableName: 'workouts',
@@ -18,6 +20,7 @@ export class Workout extends Model {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @AllowNull(false)
   @Column(DataType.TEXT)
   title: string;
 
@@ -38,4 +41,7 @@ export class Workout extends Model {
 
   @HasMany(() => SelectedExercise, { foreignKey: 'workoutId' })
   SelectedExercise: SelectedExercise;
+
+  @HasMany(() => WorkoutRating, { foreignKey: 'workoutId' })
+  WorkoutRating: WorkoutRating;
 }

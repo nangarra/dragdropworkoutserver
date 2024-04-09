@@ -5,6 +5,7 @@ import { Nutrition } from 'src/modules/nutrition/entities/nutrition.entity';
 import { Exercise } from 'src/modules/exercise/entities/exercise.entity';
 import { SelectedExercise } from 'src/modules/selected-exercise/entities/selected-exercise.entity';
 import { Workout } from 'src/modules/workout/entities/workout.entity';
+import { WorkoutRating } from 'src/modules/workout/entities/workout-rating.entity';
 
 const models = [
   User,
@@ -13,6 +14,7 @@ const models = [
   Nutrition,
   Exercise,
   Workout,
+  WorkoutRating,
   SelectedExercise,
 ];
 
