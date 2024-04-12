@@ -2,10 +2,10 @@ import {
   AllowNull,
   Column,
   DataType,
-  Default,
   HasMany,
   Model,
   Table,
+  Unique,
 } from 'sequelize-typescript';
 import { SelectedExercise } from 'src/modules/selected-exercise/entities/selected-exercise.entity';
 import { PrimaryGeneratedColumn } from 'typeorm';
@@ -20,6 +20,7 @@ export class Workout extends Model {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Unique(true)
   @AllowNull(false)
   @Column(DataType.TEXT)
   title: string;

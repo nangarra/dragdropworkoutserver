@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
-import { Op, Sequelize, Transaction } from 'sequelize';
+import { Op, Sequelize, Transaction, UniqueConstraintError } from 'sequelize';
 const _ = require('lodash');
 
 @Injectable()
@@ -76,24 +76,22 @@ export class WorkoutService {
         'SelectedExercise->Exercise.id',
       ],
     });
-
-    // console.log('');
-    // console.log('response', JSON.stringify(response, null, 2));
-    // console.log('');
-
-    // return _.orderBy(
-    //   _.map(response, (row: any) => ({
-    //     ...row,
-    //     rating: Number(row.rating || 0),
-    //   })),
-    //   [sort],
-    //   [order],
-    // );
   };
 
-  getOne = async (id: string) => {
+  getOne = async (workout: string) => {
+    function convertStringToSpacedWords(text) {
+      return text.replace(/-/g, ' ');
+    }
+
     const { repo } = this.DB;
-    const where: any = { id };
+
+    const title = convertStringToSpacedWords(workout);
+
+    const response = await repo.Workout.findOne({
+      where: { title: { [Op.iLike]: `%${title}%` } },
+    });
+
+    const where: any = { id: response.id };
 
     return repo.Workout.findOne({
       attributes: [
@@ -146,6 +144,14 @@ export class WorkoutService {
         description: data.description,
         createdAt: new Date(),
       };
+
+      const existingWorkout = await repo.Workout.findOne({
+        where: { title: { [Op.iLike]: `%${data.title}%` } },
+      });
+
+      if (existingWorkout) {
+        throw new Error('501');
+      }
 
       const createdWorkout = await repo.Workout.create(workout, {
         transaction,

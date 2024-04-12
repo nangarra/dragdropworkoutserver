@@ -22,9 +22,9 @@ export class WorkoutController {
   private logger = new Logger('WorkoutController');
   constructor(private readonly service: WorkoutService) {}
 
-  @Get('/get-one/:id')
-  getOne(@Param('id') id: string) {
-    return this.service.getOne(id);
+  @Get('/get-one/:workout')
+  getOne(@Param('workout') workout: string) {
+    return this.service.getOne(workout);
   }
 
   @UseInterceptors(TransactionInterceptor)
