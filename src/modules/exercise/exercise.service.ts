@@ -13,19 +13,13 @@ export class ExerciseService {
     const where: any = {};
 
     if (params.search) {
-      where.title = { [Op.iLike]: `%${params.search}%` };
+      where[Op.or] = [
+        { title: { [Op.iLike]: `%${params.search}%` } },
+        { discipline: { [Op.iLike]: `%${params.search}%` } },
+      ];
     }
 
     return repo.Exercise.findAll({
-      attributes: [
-        'createdAt',
-        'deletedAt',
-        'description',
-        'id',
-        'thumbnail',
-        'title',
-        'updatedAt',
-      ],
       where,
       order: [['updatedAt', 'desc']],
     });

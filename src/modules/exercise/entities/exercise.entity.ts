@@ -3,7 +3,6 @@ import {
   Column,
   DataType,
   HasMany,
-  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -21,6 +20,10 @@ export class Exercise extends Model {
 
   @Column(DataType.TEXT)
   title: string;
+
+  @AllowNull(false)
+  @Column(DataType.TEXT)
+  discipline: string;
 
   @Column(DataType.TEXT)
   description: string;

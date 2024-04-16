@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class NutritionService {
@@ -8,7 +9,14 @@ export class NutritionService {
 
   getAll = async (params: any) => {
     const { repo } = this.DB;
+    const where: any = {};
+
+    if (params.search) {
+      where[Op.or] = [{ title: { [Op.iLike]: `%${params.search}%` } }];
+    }
+
     return repo.Nutrition.findAll({
+      where,
       order: [['updatedAt', 'desc']],
     });
   };
