@@ -58,20 +58,23 @@ export class SelectedExercise extends Model {
   @Column(DataType.INTEGER)
   minutes: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   calories: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   protein: number;
 
   @Column(DataType.INTEGER)
   weight: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   fat: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   pcs: number;
+
+  @Column(DataType.FLOAT)
+  grams: number;
 
   @AllowNull(false)
   @Column(DataType.DATE)

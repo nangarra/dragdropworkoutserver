@@ -1,7 +1,7 @@
 'use strict';
 
 const TABLE = 'nutritions';
-const COLUMN1 = 'type';
+const COLUMN1 = 'nutritionType';
 const COLUMN2 = 'calories';
 const COLUMN3 = 'fat';
 const COLUMN4 = 'protein';
@@ -15,13 +15,13 @@ module.exports = {
       allowNull: false,
     });
     await queryInterface.addColumn(TABLE, COLUMN2, {
-      type: Sequelize.INTEGER,
+      type: Sequelize.REAL,
     });
     await queryInterface.addColumn(TABLE, COLUMN3, {
-      type: Sequelize.INTEGER,
+      type: Sequelize.REAL,
     });
     await queryInterface.addColumn(TABLE, COLUMN4, {
-      type: Sequelize.INTEGER,
+      type: Sequelize.REAL,
     });
   },
 

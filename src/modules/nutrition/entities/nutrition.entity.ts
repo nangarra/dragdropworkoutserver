@@ -30,15 +30,15 @@ export class Nutrition extends Model {
   thumbnail: string;
 
   @Column(DataType.TEXT)
-  type: string;
+  nutritionType: string;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   calories: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   fat: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.FLOAT)
   protein: number;
 
   @AllowNull(false)
