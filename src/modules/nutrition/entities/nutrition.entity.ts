@@ -29,6 +29,18 @@ export class Nutrition extends Model {
   @Column(DataType.TEXT)
   thumbnail: string;
 
+  @Column(DataType.TEXT)
+  type: string;
+
+  @Column(DataType.INTEGER)
+  calories: number;
+
+  @Column(DataType.INTEGER)
+  fat: number;
+
+  @Column(DataType.INTEGER)
+  protein: number;
+
   @AllowNull(false)
   @Column(DataType.DATE)
   createdAt: Date;
