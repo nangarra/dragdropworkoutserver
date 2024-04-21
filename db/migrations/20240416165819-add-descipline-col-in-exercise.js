@@ -7,7 +7,9 @@ const COLUMN = 'discipline';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addColumn(TABLE, COLUMN, {
-      type: Sequelize.TEXT,
+      type: Sequelize.JSONB,
+      allowNull: false,
+      defaultValue: [],
     });
   },
 

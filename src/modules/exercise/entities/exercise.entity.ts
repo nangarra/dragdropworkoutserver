@@ -22,8 +22,8 @@ export class Exercise extends Model {
   title: string;
 
   @AllowNull(false)
-  @Column(DataType.TEXT)
-  discipline: string;
+  @Column(DataType.JSONB)
+  discipline: any;
 
   @Column(DataType.TEXT)
   description: string;

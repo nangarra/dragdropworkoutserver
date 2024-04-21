@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
 import { Op } from 'sequelize';
+const _ = require('lodash');
 
 @Injectable()
 export class NutritionService {
@@ -10,6 +11,14 @@ export class NutritionService {
   getAll = async (params: any) => {
     const { repo } = this.DB;
     const where: any = {};
+
+    if (params.title) {
+      const titles = params.title.split(',');
+
+      where[Op.or] = _.map(titles, (row) => ({
+        title: { [Op.iLike]: `%${row}%` },
+      }));
+    }
 
     if (params.search) {
       where[Op.or] = [{ title: { [Op.iLike]: `%${params.search}%` } }];

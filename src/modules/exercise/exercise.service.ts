@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
-import _ from 'lodash';
-import { Op, Sequelize } from 'sequelize';
+import { Op } from 'sequelize';
+const _ = require('lodash');
 
 @Injectable()
 export class ExerciseService {
@@ -12,10 +12,17 @@ export class ExerciseService {
     const { repo } = this.DB;
     const where: any = {};
 
+    if (params.discipline) {
+      const disciplines = params.discipline.split(',');
+      where[Op.or] = _.map(disciplines, (row) => ({
+        discipline: { [Op.contains]: [row] },
+      }));
+    }
+
     if (params.search) {
       where[Op.or] = [
         { title: { [Op.iLike]: `%${params.search}%` } },
-        { discipline: { [Op.iLike]: `%${params.search}%` } },
+        { discipline: { [Op.contains]: [params.search] } },
       ];
     }
 

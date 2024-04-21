@@ -93,7 +93,7 @@ export class WorkoutService {
 
     const where: any = { id: response.id };
 
-    return repo.Workout.findOne({
+    const res = await repo.Workout.findOne({
       attributes: [
         'id',
         'title',
@@ -131,6 +131,17 @@ export class WorkoutService {
         'SelectedExercise->Exercise.id',
       ],
     });
+
+    res.setDataValue(
+      'SelectedExercise',
+      _.orderBy(
+        res.getDataValue('SelectedExercise'),
+        [(row: any) => row?.sequence],
+        ['asc'],
+      ),
+    );
+
+    return res;
   };
 
   create = async (data: any, transaction: Transaction = null) => {
