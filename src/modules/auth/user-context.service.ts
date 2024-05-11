@@ -22,19 +22,12 @@ export class UserContextService {
     try {
       const cUserPromise = this.getUserDetails(userData);
 
-      const [cUser] = await Promise.all([cUserPromise]);
+      const [user] = await Promise.all([cUserPromise]);
 
-      const isSuperAdmin = !_.isEmpty(cUser.SuperUser);
+      const isSuperAdmin = !_.isEmpty(user.SuperUser);
 
       const uC: any = {
-        user: {
-          id: cUser.id,
-          username: cUser.username,
-          email: cUser.email,
-          phone: cUser.phone,
-          profilePic: cUser.profilePic,
-          passwordResetAt: cUser.passwordResetAt,
-        },
+        user,
         baseUrl: BASE_URL,
         isSuperAdmin,
       };
@@ -56,14 +49,6 @@ export class UserContextService {
     try {
       const cUser = await repo.User.findOne({
         where: { id },
-        attributes: [
-          'id',
-          'username',
-          'email',
-          'phone',
-          'profilePic',
-          'isActive',
-        ],
         include: [
           {
             model: repo.SuperUser,
@@ -72,13 +57,11 @@ export class UserContextService {
             where: this.isActiveWhere,
             attributes: ['id'],
           },
-          // {
-          //   model: repo.Company,
-          //   as: 'CompanyAdmin',
-          //   required: false,
-          //   where: this.isActiveWhere,
-          //   attributes: ['id', 'name'],
-          // },
+          {
+            model: repo.Role,
+            required: true,
+            attributes: ['id', 'name'],
+          },
         ],
       });
       if (cUser && cUser.getDataValue('isActive')) {

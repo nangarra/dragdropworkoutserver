@@ -40,7 +40,7 @@ export class AuthService {
   ): Promise<any> {
     const user = await this.validateUserPassword(authCredentialsDto);
     if (!user) {
-      return this.throwInvalidCredentialsException();
+      throw new BadRequestException('Invalid credentials');
     }
     const token: any = await this.loginTokenService.generateToken(user, {
       ...clientInfo,
@@ -148,10 +148,6 @@ export class AuthService {
       throw new BadRequestException('Confirm password does not match');
     }
     throw new BadRequestException('Invalid current password');
-  }
-
-  async throwInvalidCredentialsException() {
-    throw new UnauthorizedException('Invalid credentials');
   }
 
   async getLoggedInUserByToken(tokenBearer: string) {

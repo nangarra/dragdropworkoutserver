@@ -8,6 +8,7 @@ import { Nutrition } from '../nutrition/entities/nutrition.entity';
 import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
 import { Workout } from '../workout/entities/workout.entity';
 import { WorkoutRating } from '../workout/entities/workout-rating.entity';
+import { Role } from '../role/entities/role.entity';
 
 export const globalDbProvider = [
   TransactionInterceptor,
@@ -42,5 +43,9 @@ export const globalDbProvider = [
   {
     provide: REPOSITORIES.SELECTED_EXERCISE_REPOSITORY,
     useValue: SelectedExercise,
+  },
+  {
+    provide: REPOSITORIES.ROLE_REPOSITORY,
+    useValue: Role,
   },
 ];
