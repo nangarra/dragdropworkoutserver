@@ -1,6 +1,6 @@
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
-import { Op, Sequelize, Transaction, UniqueConstraintError } from 'sequelize';
+import { Op, Sequelize, Transaction } from 'sequelize';
 const _ = require('lodash');
 
 @Injectable()
@@ -11,11 +11,23 @@ export class WorkoutService {
   getAll = async (params: any) => {
     const { repo } = this.DB;
     const where: any = {};
+    const assignedWhere: any = {};
+    let assignedRequired: boolean = false;
+
     let sort: string = 'rating';
     let order: string = 'desc';
 
     if (params.workoutId) {
       where.workoutId = params.workoutId;
+    }
+
+    if (params.createdBy) {
+      where.createdBy = params.createdBy;
+    }
+
+    if (params.assignedToMe) {
+      assignedWhere.clientId = params.assignedToMe;
+      assignedRequired = true;
     }
 
     if (params.sort === 'popular') {
@@ -67,6 +79,19 @@ export class WorkoutService {
           model: repo.WorkoutRating,
           attributes: [],
         },
+        {
+          model: repo.AssignedWorkout,
+          where: assignedWhere,
+          required: assignedRequired,
+        },
+        {
+          model: repo.User,
+          attributes: ['id', 'username', 'email', 'profilePic'],
+          include: {
+            model: repo.Role,
+            attributes: ['id', 'name'],
+          },
+        },
       ],
       order: [[sort, order]],
       group: [
@@ -74,6 +99,9 @@ export class WorkoutService {
         'SelectedExercise.id',
         'SelectedExercise->Nutrition.id',
         'SelectedExercise->Exercise.id',
+        'User.id',
+        'User->Role.id',
+        'AssignedWorkout.id',
       ],
     });
   };
@@ -123,12 +151,22 @@ export class WorkoutService {
           model: repo.WorkoutRating,
           attributes: [],
         },
+        {
+          model: repo.User,
+          attributes: ['id', 'username', 'email', 'profilePic'],
+          include: {
+            model: repo.Role,
+            attributes: ['id', 'name'],
+          },
+        },
       ],
       group: [
         'Workout.id',
         'SelectedExercise.id',
         'SelectedExercise->Nutrition.id',
         'SelectedExercise->Exercise.id',
+        'User.id',
+        'User->Role.id',
       ],
     });
 
@@ -150,20 +188,71 @@ export class WorkoutService {
 
       const { selected } = data;
 
-      const workout = {
+      const workout: any = {
         title: data.title,
         description: data.description,
-        createdAt: new Date(),
       };
 
-      const existingWorkout = await repo.Workout.findOne({
-        where: { title: { [Op.iLike]: `%${data.title}%` } },
-      });
-
-      if (existingWorkout) {
-        throw new Error('501');
+      if (data.createdBy) {
+        workout.createdBy = data.createdBy;
       }
 
+      if (!data.id) {
+        const existingWorkout = await repo.Workout.findOne({
+          where: { title: { [Op.iLike]: `%${data.title}%` } },
+        });
+
+        if (existingWorkout) {
+          throw new Error('501');
+        }
+      }
+
+      // -------------------------------  Update Workout --------------------------------- //
+
+      if (data.id) {
+        const updatedWorkout = await repo.Workout.update(
+          workout,
+          { where: { id: data.id } },
+          {
+            transaction,
+          },
+        );
+
+        await repo.SelectedExercise.destroy({
+          where: { workoutId: data.id },
+          force: true,
+        });
+
+        const selectedItems = _.map(selected, (row: any, index: number) => {
+          const body = _.cloneDeep(row);
+          if (body.type === 'exercises') {
+            body.exerciseId = body.id;
+          }
+          if (body.type === 'nutritions') {
+            body.nutritionId = body.id;
+          }
+          delete body.id;
+          delete body.title;
+          delete body.description;
+          delete body.updatedAt;
+          delete body.thumbnail;
+
+          body.workoutId = data.id;
+          body.createdAt = new Date();
+          body.sequence = index + 1;
+
+          return body;
+        });
+
+        const response = await repo.SelectedExercise.bulkCreate(selectedItems, {
+          transaction,
+        });
+        return repo.Workout.findOne({ where: { id: data.id } });
+      }
+
+      // -------------------------------  Creating Workout --------------------------------- //
+
+      workout.createdAt = new Date();
       const createdWorkout = await repo.Workout.create(workout, {
         transaction,
       });
@@ -212,5 +301,22 @@ export class WorkoutService {
     const data = { workoutId, rating };
     await repo.WorkoutRating.create(data);
     return { message: 'Workout Rated!' };
+  };
+
+  assignWorkout = async (workoutId: string, clients: any) => {
+    const { repo } = this.DB;
+
+    await repo.AssignedWorkout.destroy({ where: { workoutId }, force: true });
+
+    for (const clientId of clients) {
+      const data = {
+        workoutId,
+        clientId,
+        createdAt: new Date(),
+      };
+      await repo.AssignedWorkout.create(data);
+    }
+
+    return { message: 'Workout assigned!' };
   };
 }

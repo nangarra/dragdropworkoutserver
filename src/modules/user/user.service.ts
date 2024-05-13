@@ -47,4 +47,16 @@ export class UserService {
 
     return { message: 'Password updated !' };
   };
+
+  getUser = async (id: string) => {
+    const { repo } = this.DB;
+
+    return repo.User.findOne({
+      where: { id },
+      include: {
+        model: repo.Role,
+        required: true,
+      },
+    });
+  };
 }

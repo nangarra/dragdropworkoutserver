@@ -7,6 +7,8 @@ import { SelectedExercise } from 'src/modules/selected-exercise/entities/selecte
 import { Workout } from 'src/modules/workout/entities/workout.entity';
 import { WorkoutRating } from 'src/modules/workout/entities/workout-rating.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
+import { AssignedWorkout } from 'src/modules/workout/entities/assigned-workouts';
+import { PersonalTrainerClient } from 'src/modules/user/entities/personale-trainer-clients';
 
 const models = [
   User,
@@ -18,6 +20,8 @@ const models = [
   WorkoutRating,
   SelectedExercise,
   Role,
+  AssignedWorkout,
+  PersonalTrainerClient,
 ];
 
 export const appModels = models;

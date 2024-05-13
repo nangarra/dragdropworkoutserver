@@ -15,16 +15,16 @@ import { Transaction } from 'sequelize';
 import { TransactionParam } from 'src/database/transaction-param.decorator';
 import { TransactionInterceptor } from 'src/database/transaction.interceptor';
 import { GetLoggedInUser } from '../auth/decorators/get-logged-in-user.decorator';
-import { WorkoutService } from './workout.service';
+import { ClientService } from './client.service';
 
-@Controller('workouts')
-export class WorkoutController {
-  private logger = new Logger('WorkoutController');
-  constructor(private readonly service: WorkoutService) {}
+@Controller('clients')
+export class ClientController {
+  private logger = new Logger('ClientController');
+  constructor(private readonly service: ClientService) {}
 
-  @Get('/get-one/:workout')
-  getOne(@Param('workout') workout: string) {
-    return this.service.getOne(workout);
+  @Get('/get-one/:client')
+  getOne(@Param('client') client: string) {
+    return this.service.getOne(client);
   }
 
   @UseInterceptors(TransactionInterceptor)
@@ -33,17 +33,12 @@ export class WorkoutController {
     return this.service.create(body, transaction);
   }
 
-  @Post('/set-rating/:workoutId/:rating')
+  @Post('/set-rating/:clientId/:rating')
   setRating(
-    @Param('workoutId') workoutId: string,
+    @Param('clientId') clientId: string,
     @Param('rating') rating: number,
   ) {
-    return this.service.setRating(workoutId, rating);
-  }
-
-  @Post('/assign-workout/:workoutId')
-  assignWorkout(@Param('workoutId') workoutId: string, @Body() clients: any) {
-    return this.service.assignWorkout(workoutId, clients);
+    return this.service.setRating(clientId, rating);
   }
 
   @Get('/get-all')

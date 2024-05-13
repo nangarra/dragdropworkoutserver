@@ -59,11 +59,27 @@ export class AuthService {
     }
     user.salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(password, user.salt);
+
+    const role = await this.DB.repo.Role.findOne({
+      raw: true,
+      where: { name: user.type },
+    });
+
+    user.roleId = role.id;
     try {
       const savedUser = await this.DB.repo.User.create(user);
       const token: any = await this.loginTokenService.generateToken(savedUser, {
         ...clientInfo,
       });
+
+      if (user.type === 'Client' && user.trainerId) {
+        const data = {
+          trainerId: user.trainerId,
+          clientId: savedUser.id,
+          createdAt: new Date(),
+        };
+        await this.DB.repo.PersonalTrainerClient.create(data);
+      }
       return token;
     } catch (error) {
       if (error.parent.code === UNIQUE_KEY_VIOLATION) {

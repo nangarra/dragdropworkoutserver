@@ -18,6 +18,9 @@ import {
 import { LoginToken } from 'src/modules/auth/entities/login-token.entity';
 import { SuperUser } from './super-user.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
+import { Workout } from 'src/modules/workout/entities/workout.entity';
+import { PersonalTrainerClient } from './personale-trainer-clients';
+import { AssignedWorkout } from 'src/modules/workout/entities/assigned-workouts';
 
 @DefaultScope(() => ({
   attributes: { exclude: ['password', 'salt'] },
@@ -103,4 +106,16 @@ export class User extends Model {
 
   @BelongsTo(() => Role, { foreignKey: 'roleId' })
   Role: Role;
+
+  @HasMany(() => Workout, { foreignKey: 'createdBy' })
+  Workout: Workout;
+
+  @HasMany(() => PersonalTrainerClient, { foreignKey: 'trainerId' })
+  Trainer: PersonalTrainerClient;
+
+  @HasMany(() => PersonalTrainerClient, { foreignKey: 'clientId' })
+  Client: PersonalTrainerClient;
+
+  @HasMany(() => AssignedWorkout, { foreignKey: 'clientId' })
+  AssignedWorkout: AssignedWorkout;
 }
