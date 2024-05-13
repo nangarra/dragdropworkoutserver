@@ -59,114 +59,27 @@ export class ClientService {
     });
   };
 
-  create = async (data: any, transaction: Transaction = null) => {
+  delete = async (clientId: string, loggedInUser: any) => {
     try {
-      const { repo } = this.DB;
+      const { id: trainerId } = loggedInUser.user;
 
-      const { selected } = data;
+      await this.DB.delete(
+        'PersonalTrainerClient',
+        { clientId, trainerId },
+        loggedInUser,
+      );
 
-      const client: any = {
-        title: data.title,
-        description: data.description,
-      };
-
-      if (data.createdBy) {
-        client.createdBy = data.createdBy;
-      }
-
-      if (!data.id) {
-        const existingClient = await repo.Client.findOne({
-          where: { title: { [Op.iLike]: `%${data.title}%` } },
-        });
-
-        if (existingClient) {
-          throw new Error('501');
-        }
-      }
-
-      // -------------------------------  Update Client --------------------------------- //
-
-      if (data.id) {
-        const updatedClient = await repo.Client.update(
-          client,
-          { where: { id: data.id } },
-          {
-            transaction,
-          },
-        );
-
-        await repo.SelectedExercise.destroy({
-          where: { clientId: data.id },
-          force: true,
-        });
-
-        const selectedItems = _.map(selected, (row: any, index: number) => {
-          const body = _.cloneDeep(row);
-          if (body.type === 'exercises') {
-            body.exerciseId = body.id;
-          }
-          if (body.type === 'nutritions') {
-            body.nutritionId = body.id;
-          }
-          delete body.id;
-          delete body.title;
-          delete body.description;
-          delete body.updatedAt;
-          delete body.thumbnail;
-
-          body.clientId = data.id;
-          body.createdAt = new Date();
-          body.sequence = index + 1;
-
-          return body;
-        });
-
-        const response = await repo.SelectedExercise.bulkCreate(selectedItems, {
-          transaction,
-        });
-        return repo.Client.findOne({ where: { id: data.id } });
-      }
-
-      // -------------------------------  Creating Client --------------------------------- //
-
-      client.createdAt = new Date();
-      const createdClient = await repo.Client.create(client, {
-        transaction,
+      const response = await this.DB.repo.Workout.findAll({
+        where: { createdBy: trainerId },
+        raw: true,
       });
 
-      const selectedItems = _.map(selected, (row: any, index: number) => {
-        const body = _.cloneDeep(row);
-        if (body.type === 'exercises') {
-          body.exerciseId = body.id;
-        }
-        if (body.type === 'nutritions') {
-          body.nutritionId = body.id;
-        }
-        delete body.id;
-        delete body.title;
-        delete body.description;
-        delete body.updatedAt;
-        delete body.thumbnail;
+      await this.DB.delete(
+        'AssignedWorkout',
+        { clientId, workoutId: { [Op.in]: _.map(response, 'id') } },
+        loggedInUser,
+      );
 
-        body.clientId = createdClient.id;
-        body.createdAt = new Date();
-        body.sequence = index + 1;
-
-        return body;
-      });
-
-      const response = await repo.SelectedExercise.bulkCreate(selectedItems, {
-        transaction,
-      });
-      return createdClient;
-    } catch (error) {
-      throw { message: error.message };
-    }
-  };
-
-  delete = async (id: string, loggedInUser: any) => {
-    try {
-      await this.DB.delete('Client', { id }, loggedInUser);
       return { message: 'Client Deleted!' };
     } catch (error) {
       throw { message: error.message };

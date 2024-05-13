@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -8,12 +7,8 @@ import {
   Post,
   Query,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Transaction } from 'sequelize';
-import { TransactionParam } from 'src/database/transaction-param.decorator';
-import { TransactionInterceptor } from 'src/database/transaction.interceptor';
 import { GetLoggedInUser } from '../auth/decorators/get-logged-in-user.decorator';
 import { ClientService } from './client.service';
 
@@ -25,12 +20,6 @@ export class ClientController {
   @Get('/get-one/:client')
   getOne(@Param('client') client: string) {
     return this.service.getOne(client);
-  }
-
-  @UseInterceptors(TransactionInterceptor)
-  @Post('/create')
-  create(@Body() body: any, @TransactionParam() transaction: Transaction) {
-    return this.service.create(body, transaction);
   }
 
   @Post('/set-rating/:clientId/:rating')
