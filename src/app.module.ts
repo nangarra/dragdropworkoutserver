@@ -7,6 +7,7 @@ import { NutritionModule } from './modules/nutrition/nutrition.module';
 import { SelectedExerciseModule } from './modules/selected-exercise/selected-exercise.module';
 import { UserModule } from './modules/user/user.module';
 import { WorkoutModule } from './modules/workout/workout.module';
+import { RoleModule } from './modules/role/role.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WorkoutModule } from './modules/workout/workout.module';
     ExerciseModule,
     WorkoutModule,
     SelectedExerciseModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [],

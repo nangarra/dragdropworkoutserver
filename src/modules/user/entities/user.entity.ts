@@ -12,9 +12,15 @@ import {
   HasMany,
   DefaultScope,
   Scopes,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { LoginToken } from 'src/modules/auth/entities/login-token.entity';
 import { SuperUser } from './super-user.entity';
+import { Role } from 'src/modules/role/entities/role.entity';
+import { Workout } from 'src/modules/workout/entities/workout.entity';
+import { PersonalTrainerClient } from './personale-trainer-clients';
+import { AssignedWorkout } from 'src/modules/workout/entities/assigned-workouts';
 
 @DefaultScope(() => ({
   attributes: { exclude: ['password', 'salt'] },
@@ -50,7 +56,24 @@ export class User extends Model {
   phone: string;
 
   @Column(DataType.TEXT)
+  description: string;
+
+  @Column(DataType.JSONB)
+  socials: JSON;
+
+  @Column(DataType.TEXT)
+  location: string;
+
+  @Column(DataType.TEXT)
   profilePic: string;
+
+  @AllowNull(false)
+  @ForeignKey(() => Role)
+  @Column({
+    type: DataType.UUID,
+    field: 'fkRoleId',
+  })
+  roleId: string;
 
   @Default(true)
   @AllowNull(false)
@@ -80,4 +103,19 @@ export class User extends Model {
 
   @HasMany(() => LoginToken, { foreignKey: 'userId' })
   LoginToken: LoginToken;
+
+  @BelongsTo(() => Role, { foreignKey: 'roleId' })
+  Role: Role;
+
+  @HasMany(() => Workout, { foreignKey: 'createdBy' })
+  Workout: Workout;
+
+  @HasMany(() => PersonalTrainerClient, { foreignKey: 'trainerId' })
+  Trainer: PersonalTrainerClient;
+
+  @HasMany(() => PersonalTrainerClient, { foreignKey: 'clientId' })
+  Client: PersonalTrainerClient;
+
+  @HasMany(() => AssignedWorkout, { foreignKey: 'clientId' })
+  AssignedWorkout: AssignedWorkout;
 }

@@ -4,16 +4,19 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { REPOSITORIES } from 'src/constants/repositories';
 import { UNIQUE_KEY_VIOLATION } from 'src/constants';
+import { REPOSITORIES } from 'src/constants/repositories';
 import { LoginToken } from '../auth/entities/login-token.entity';
+import { Exercise } from '../exercise/entities/exercise.entity';
+import { Nutrition } from '../nutrition/entities/nutrition.entity';
+import { Role } from '../role/entities/role.entity';
+import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
 import { SuperUser } from '../user/entities/super-user.entity';
 import { User } from '../user/entities/user.entity';
-import { Nutrition } from '../nutrition/entities/nutrition.entity';
-import { Exercise } from '../exercise/entities/exercise.entity';
-import { SelectedExercise } from '../selected-exercise/entities/selected-exercise.entity';
-import { Workout } from '../workout/entities/workout.entity';
 import { WorkoutRating } from '../workout/entities/workout-rating.entity';
+import { Workout } from '../workout/entities/workout.entity';
+import { AssignedWorkout } from '../workout/entities/assigned-workouts';
+import { PersonalTrainerClient } from '../user/entities/personale-trainer-clients';
 
 @Injectable()
 export class GlobalDbService {
@@ -36,6 +39,12 @@ export class GlobalDbService {
     private readonly workoutRatingRepo: typeof WorkoutRating,
     @Inject(REPOSITORIES.SELECTED_EXERCISE_REPOSITORY)
     private readonly selectedExercise: typeof SelectedExercise,
+    @Inject(REPOSITORIES.ROLE_REPOSITORY)
+    private readonly roleRepo: typeof Role,
+    @Inject(REPOSITORIES.ASSIGNED_CLIENT_REPOSITORY)
+    private readonly assignedWorkoutRepo: typeof AssignedWorkout,
+    @Inject(REPOSITORIES.PERSONAL_TRAINER_CLIENT_REPOSITORY)
+    private readonly personalTrainerClientRepo: typeof PersonalTrainerClient,
   ) {
     this.repo['User'] = this.userRepository;
     this.repo['LoginToken'] = this.loginTokenRepository;
@@ -45,6 +54,9 @@ export class GlobalDbService {
     this.repo['Workout'] = this.workoutRepo;
     this.repo['WorkoutRating'] = this.workoutRatingRepo;
     this.repo['SelectedExercise'] = this.selectedExercise;
+    this.repo['Role'] = this.roleRepo;
+    this.repo['AssignedWorkout'] = this.assignedWorkoutRepo;
+    this.repo['PersonalTrainerClient'] = this.personalTrainerClientRepo;
   }
 
   async getOne(model: string, params: any) {

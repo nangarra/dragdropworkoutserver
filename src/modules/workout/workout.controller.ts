@@ -41,6 +41,11 @@ export class WorkoutController {
     return this.service.setRating(workoutId, rating);
   }
 
+  @Post('/assign-workout/:workoutId')
+  assignWorkout(@Param('workoutId') workoutId: string, @Body() clients: any) {
+    return this.service.assignWorkout(workoutId, clients);
+  }
+
   @Get('/get-all')
   getAll(@Query() query: any) {
     return this.service.getAll(query);
