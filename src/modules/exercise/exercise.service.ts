@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GlobalDbService } from '../global-db/global-db.service';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 const _ = require('lodash');
 
 @Injectable()
@@ -12,17 +12,19 @@ export class ExerciseService {
     const { repo } = this.DB;
     const where: any = {};
 
-    if (params.discipline) {
-      const disciplines = params.discipline.split(',');
-      where[Op.or] = _.map(disciplines, (row) => ({
-        discipline: { [Op.contains]: [row] },
-      }));
-    }
+    // if (params.discipline) {
+    //   const disciplines = params.discipline.split(',');
+    //   where[Op.or] = _.map(disciplines, (row) => ({
+    //     discipline: { [Op.contains]: [row] },
+    //   }));
+    // }
 
     if (params.search) {
       where[Op.or] = [
         { title: { [Op.iLike]: `%${params.search}%` } },
-        { discipline: { [Op.contains]: [params.search] } },
+        Sequelize.literal(
+          `EXISTS (SELECT 1 FROM jsonb_array_elements_text(discipline) elem WHERE LOWER(elem) ILIKE '%${params.search}%')`,
+        ),
       ];
     }
 
@@ -31,6 +33,7 @@ export class ExerciseService {
       order: [['updatedAt', 'desc']],
     });
   };
+
   save = async (data: any, loggedInUser: any) => {
     try {
       return this.DB.save('Exercise', data, loggedInUser);
